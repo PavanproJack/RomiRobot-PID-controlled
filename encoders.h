@@ -7,11 +7,11 @@
 //E0_B_Pin is defined seperately later
 
 // Volatile Global variables used by Encoder ISR.
-volatile long count_e1; // used by encoder to count the rotation
+volatile long count_right_e; // used by encoder to count the rotation
 volatile bool oldE1_A;  // used by encoder to remember prior state of A
 volatile bool oldE1_B;  // used by encoder to remember prior state of B
 
-volatile long count_e0; // used by encoder to count the rotation
+volatile long count_left_e; // used by encoder to count the rotation
 volatile bool oldE0_A;  // used by encoder to remember prior state of A
 volatile bool oldE0_B;  // used by encoder to remember prior state of B
 
@@ -49,7 +49,22 @@ ISR( INT6_vect ) {
   // the direction.  However it illustrates well
   // against the lecture slides.
   switch( state ) {
-  
+    case 0:                   break; // No movement.
+    case 1:  count_right_e--; break;  // clockwise?
+    case 2:  count_right_e++; break;  // anti-clockwise?
+    case 3:                   break;  // Invalid
+    case 4:  count_right_e++; break;  // anti-clockwise?
+    case 5:                   break;  // No movement.
+    case 6:                   break;  // Invalid
+    case 7:  count_right_e--; break;  // clockwise?
+    case 8:  count_right_e--; break;  // clockwise?
+    case 9:                   break;  // Invalid
+    case 10:                  break;  // No movement.
+    case 11: count_right_e++; break;  // anti-clockwise?
+    case 12:                  break;  // Invalid
+    case 13: count_right_e++; break;  // anti-clockwise?
+    case 14: count_right_e--; break;  // clockwise?
+    case 15:                  break;  // No movement.
   }
 
   // Save current state as old state for next call.
@@ -101,15 +116,28 @@ ISR( PCINT0_vect ) {
   // the direction.  However it illustrates well
   // against the lecture slides.  
   switch( state ) {
-
+    case 0:                  break; // No movement.
+    case 1:  count_left_e--; break;  // clockwise?
+    case 2:  count_left_e++; break;  // anti-clockwise?
+    case 3:                  break;  // Invalid
+    case 4:  count_left_e++; break;  // anti-clockwise?
+    case 5:                  break;  // No movement.
+    case 6:                  break;  // Invalid
+    case 7:  count_left_e--; break;  // clockwise?
+    case 8:  count_left_e--; break;  // clockwise?
+    case 9:                  break;  // Invalid
+    case 10:                 break;  // No movement.
+    case 11: count_left_e++; break;  // anti-clockwise?
+    case 12:                 break;  // Invalid
+    case 13: count_left_e++; break;  // anti-clockwise?
+    case 14: count_left_e--; break;  // clockwise?
+    case 15:                 break;  // No movement.
   }
      
   // Save current state as old state for next call.
   oldE0_A = newE0_A;
   oldE0_B = newE0_B; 
 }
-
-
 
 
 
@@ -120,10 +148,10 @@ ISR( PCINT0_vect ) {
    This is really convenient!  It means we don't
    have to check the encoder manually.
 */
-void setupEncoder1() {
+void setupRightEncoder() {
 
   // Initialise our count value to 0.
-  count_e1 = 0;
+  count_right_e = 0;
 
   // Initialise the prior A & B signals
   // to zero, we don't know what they were.
@@ -163,10 +191,10 @@ void setupEncoder1() {
 
 }
 
-void setupEncoder0() {
+void setupLeftEncoder() {
 
     // Initialise our count value to 0.
-    count_e0 = 0;
+    count_left_e = 0;
 
     // Initialise the prior A & B signals
     // to zero, we don't know what they were.
